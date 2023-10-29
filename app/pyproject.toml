@@ -9,6 +9,9 @@ readme = "README.md"
 python = "^3.10"
 fastapi = "^0.104.0"
 uvicorn = "^0.23.2"
+sqlalchemy = "^2.0.22"
+alembic = "^1.12.1"
+asyncpg = "^0.28.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -19,3 +22,17 @@ mypy = "^1.6.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ['py39']
+line-length = 120
+extend-exclude = '/alembic'
+
+[tool.isort]
+py_version = 39
+profile = 'black'
+lines_between_types = 1
+combine_as_imports = true
+multi_line_output = 3
+force_grid_wrap = 2
+skip = ["alembic"]
