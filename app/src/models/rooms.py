@@ -5,7 +5,7 @@ from sqlalchemy import Column, String, Integer, DECIMAL, JSON, ForeignKey
 class Rooms(Base):
     __tablename__ = "rooms"
 
-    hotel_id = Column(ForeignKey("hotels.id"))
+    hotel_id = Column(ForeignKey("hotels.id"), nullable=False)
     name = Column(String, nullable=False)
     description = Column(String)
     price = Column(DECIMAL(10, 2), nullable=False)
