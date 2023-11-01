@@ -7,11 +7,14 @@ from os.path import dirname, abspath
 
 from alembic import context
 
-sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
-
 from app.config import settings  # noqa: E402
 from app.db import Base  # noqa: E402
-from app.src.models.hotels import Hotels  # noqa: E402, F401
+from app.src.models.hotels import Hotels  # noqa: F401
+from app.src.models.rooms import Rooms  # noqa: F401
+from app.src.models.users import Users  # noqa: F401
+from app.src.models.bookings import Bookings  # noqa: F401
+
+sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
