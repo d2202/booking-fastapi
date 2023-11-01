@@ -10,7 +10,7 @@ from sqlalchemy import (
 
 DB_HOST = "localhost"
 DB_PORT = 5432
-DB_USER = "postrges"
+DB_USER = "postgres"
 DB_PSWD = "postgres"
 DB_NAME = "postgres"
 
