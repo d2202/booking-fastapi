@@ -9,14 +9,15 @@ from alembic import context
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
-from app.db import Base, DATABASE_URL  # noqa: E402
+from app.config import settings  # noqa: E402
+from app.db import Base  # noqa: E402
 from app.src.models.hotels import Hotels  # noqa: E402, F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("sqlalchemy.url", f"{DATABASE_URL}?async_fallback=True")
+config.set_main_option("sqlalchemy.url", f"{settings.database_url}?async_fallback=True")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

@@ -6,17 +6,9 @@ from sqlalchemy import (
     Integer,
     func,
 )
+from app.config import settings
 
-
-DB_HOST = "localhost"
-DB_PORT = 5432
-DB_USER = "postgres"
-DB_PSWD = "postgres"
-DB_NAME = "postgres"
-
-DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PSWD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-engine = create_async_engine(url=DATABASE_URL)
+engine = create_async_engine(url=settings.database_url)
 
 async_session_maker = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
