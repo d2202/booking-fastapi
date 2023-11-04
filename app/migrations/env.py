@@ -8,7 +8,7 @@ from os.path import dirname, abspath
 from alembic import context
 
 from app.config import settings  # noqa: E402
-from app.db import Base  # noqa: E402
+from app.src.models.db import Base  # noqa: E402
 from app.src.models.hotels import Hotels  # noqa: F401
 from app.src.models.rooms import Rooms  # noqa: F401
 from app.src.models.users import Users  # noqa: F401

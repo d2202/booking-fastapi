@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.src.api.router import router as router_booking
+from app.src.api.bookings_router import router as router_booking
 
 app = FastAPI(debug=True)
 app.include_router(router=router_booking)
