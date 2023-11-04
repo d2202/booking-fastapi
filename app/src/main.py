@@ -1,14 +1,10 @@
-from fastapi import FastAPI, Depends
-from .schemas.hotels import GetHotelsRequestArgs
+from fastapi import FastAPI
+from app.src.api.router import router as router_booking
 
 app = FastAPI(debug=True)
+app.include_router(router=router_booking)
 
 
-@app.get("/health")
-async def health() -> str:
+@app.get("/health", tags=["Health check"])
+async def get_health() -> str:
     return "Ok"
-
-
-@app.get("/hotels")
-async def get_hotels(request_args: GetHotelsRequestArgs = Depends()) -> str:
-    return "Get hotels"
