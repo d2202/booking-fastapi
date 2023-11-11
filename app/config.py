@@ -1,3 +1,6 @@
+from base64 import b64encode
+from secrets import token_bytes
+
 from pydantic_settings import BaseSettings
 
 
@@ -7,6 +10,8 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PSWD: str
     DB_NAME: str
+    JWT_ALGORITHM: str
+    SERVER_SECRET_KEY: str
 
     @property
     def database_url(self) -> str:
