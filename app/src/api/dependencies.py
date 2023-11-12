@@ -5,6 +5,7 @@ from starlette.requests import Request
 from jose import jwt, JWTError
 
 from app.config import settings
+from app.src.models.users import Users
 from app.src.services.users_service import users_service
 
 
@@ -29,3 +30,9 @@ async def get_current_user(token: str = Depends(get_cookies)):
             if user:
                 return user
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+
+async def get_current_admin_user(current_user: Users = Depends(get_current_user)) -> Users:
+    if not current_user.is_admin or (current_user.is_admin is None):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+    return current_user

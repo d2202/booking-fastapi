@@ -12,6 +12,9 @@ class UsersService:
     def __init__(self):
         self.repository = users_repository
 
+    async def get_all_users(self) -> list[Users]:
+        return await self.repository.get_all()
+
     async def get_by_id(self, user_id: int) -> Users:
         return await self.repository.get_by_id(model_id=user_id)
 
@@ -29,10 +32,6 @@ class UsersService:
                 access_token = create_access_token(data={"sub": str(existing_user.id)})
                 return access_token
         raise AuthFailedException
-
-    async def get_user_bookings(self, user_id: int) -> list[Bookings]:
-        # TODO: get all user bookings by id
-        pass
 
 
 users_service = UsersService()

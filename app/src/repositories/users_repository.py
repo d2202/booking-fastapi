@@ -6,7 +6,6 @@ class UsersRepository(BaseRepository):
     model = Users
 
     async def get_user_by_id(self, user_id: int) -> Users:
-        # TODO: return users email and id
         return await self.get_by_id(model_id=user_id)
 
     async def get_user_by_email(self, email: str) -> Users:

@@ -9,5 +9,8 @@ class BookingService:
     async def get_all_bookings(self) -> list[Bookings]:
         return await self.repository.get_all_bookings()
 
+    async def get_user_bookings(self, user_id: int) -> list[Bookings]:
+        return await self.repository.get_by_user_id(user_id=user_id)
+
 
 booking_service = BookingService()
