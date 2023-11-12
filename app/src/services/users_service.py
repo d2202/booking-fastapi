@@ -1,11 +1,7 @@
 from app.src.api.auth import get_password_hash, verify_password, create_access_token
-from app.src.models.bookings import Bookings
+from app.src.api.exceptions import UserAlreadyExistsException, IncorrectUserDataException
 from app.src.models.users import Users
 from app.src.repositories.users_repository import users_repository
-
-
-class AuthFailedException(Exception):
-    pass
 
 
 class UsersService:
@@ -23,6 +19,7 @@ class UsersService:
         if not existing_user:
             hashed_passwd = get_password_hash(password=password)
             await self.repository.add_new_user(email=email, hashed_passwd=hashed_passwd)
+        raise UserAlreadyExistsException
 
     async def login_user(self, email: str, password: str) -> str:
         existing_user = await self.repository.get_user_by_email(email=email)
@@ -31,7 +28,7 @@ class UsersService:
             if is_valid_password:
                 access_token = create_access_token(data={"sub": str(existing_user.id)})
                 return access_token
-        raise AuthFailedException
+        raise IncorrectUserDataException
 
 
 users_service = UsersService()
