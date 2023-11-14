@@ -1,8 +1,7 @@
 from decimal import Decimal
 from datetime import date
 
-from pydantic import BaseModel
-from pydantic.v1 import root_validator
+from pydantic import BaseModel, root_validator
 
 
 class Booking(BaseModel):
@@ -28,12 +27,12 @@ class PostAddNewBooking(BaseModel):
     date_from: date
     date_to: date
 
-    class Config:
-        from_attributes = True
-
     @root_validator(pre=True)
-    def validate_all(cls, values):
-        print(f"{values}")
-        # TODO: пофиксить сравнение date_from и date_to
+    def validate_dates(cls, values):
+        date_to = values.get("date_to")
+        date_from = values.get("date_from")
+        if date_from > date_to:
+            raise ValueError("Дата выезда не может быть больше даты заезда")
+        if date_from == date_to:
+            raise ValueError("Даты заезда и выезда не могут быть одинаковыми")
         return values
-
