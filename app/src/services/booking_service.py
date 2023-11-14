@@ -1,10 +1,19 @@
 from app.src.models.bookings import Bookings
 from app.src.repositories.booking_repository import booking_repository
+from datetime import date
 
 
 class BookingService:
     def __init__(self):
         self.repository = booking_repository
+
+    async def add_booking(self, user_id: int, room_id: int, date_from: date, date_to: date):
+        await self.repository.add_booking(
+            user_id=user_id,
+            room_id=room_id,
+            date_from=date_from,
+            date_to=date_to
+        )
 
     async def get_all_bookings(self) -> list[Bookings]:
         return await self.repository.get_all_bookings()
