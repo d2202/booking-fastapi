@@ -1,5 +1,8 @@
 from app.src.api.auth import get_password_hash, verify_password, create_access_token
-from app.src.api.exceptions import UserAlreadyExistsException, IncorrectUserDataException
+from app.src.api.exceptions import (
+    UserAlreadyExistsException,
+    IncorrectUserDataException,
+)
 from app.src.models.users import Users
 from app.src.repositories.users_repository import users_repository
 

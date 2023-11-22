@@ -5,7 +5,11 @@ from starlette.requests import Request
 from jose import jwt, JWTError
 
 from app.config import settings
-from app.src.api.exceptions import TokenNotFoundException, BadTokenException, AccessDeniedException
+from app.src.api.exceptions import (
+    TokenNotFoundException,
+    BadTokenException,
+    AccessDeniedException,
+)
 from app.src.models.users import Users
 from app.src.services.users_service import users_service
 
@@ -19,7 +23,11 @@ def get_cookies(request: Request):
 
 async def get_current_user(token: str = Depends(get_cookies)):
     try:
-        payload = jwt.decode(token=token, key=settings.SERVER_SECRET_KEY, algorithms=settings.JWT_ALGORITHM)
+        payload = jwt.decode(
+            token=token,
+            key=settings.SERVER_SECRET_KEY,
+            algorithms=settings.JWT_ALGORITHM,
+        )
     except JWTError:
         raise BadTokenException
 
@@ -33,7 +41,9 @@ async def get_current_user(token: str = Depends(get_cookies)):
     raise BadTokenException
 
 
-async def get_current_admin_user(current_user: Users = Depends(get_current_user)) -> Users:
+async def get_current_admin_user(
+    current_user: Users = Depends(get_current_user)
+) -> Users:
     if not current_user.is_admin or (current_user.is_admin is None):
         raise AccessDeniedException
     return current_user

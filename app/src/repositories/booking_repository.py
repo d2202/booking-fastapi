@@ -1,6 +1,10 @@
 from sqlalchemy import select, and_, or_, func
 
-from app.src.api.exceptions import BookingErrorException, RoomNotFoundError
+from app.src.api.exceptions import (
+    BookingErrorException,
+    RoomNotFoundError,
+    BookingNotFoundException,
+)
 from app.src.models.bookings import Bookings
 from app.src.models.db import async_session_maker
 from app.src.models.rooms import Rooms
@@ -11,38 +15,49 @@ from datetime import date
 class BookingRepository(BaseRepository):
     model = Bookings
 
-    async def check_booking_available(self, room_id: int, date_from: date, date_to: date):
+    async def check_booking_available(
+        self, room_id: int, date_from: date, date_to: date
+    ):
         async with async_session_maker() as session:
-            booked_rooms = select(Bookings).where(
-                and_(
-                    Bookings.room_id == room_id,
-                    or_(
-                        and_(
-                            Bookings.date_from >= date_from,
-                            Bookings.date_from <= date_to
-
+            booked_rooms = (
+                select(Bookings)
+                .where(
+                    and_(
+                        Bookings.room_id == room_id,
+                        or_(
+                            and_(
+                                Bookings.date_from >= date_from,
+                                Bookings.date_from <= date_to,
+                            ),
+                            and_(
+                                Bookings.date_from <= date_from,
+                                Bookings.date_to <= date_from,
+                            ),
                         ),
-                        and_(
-                            Bookings.date_from <= date_from,
-                            Bookings.date_to <= date_from
-                        )
                     )
                 )
-            ).cte("booked_rooms")
+                .cte("booked_rooms")
+            )
 
-            get_rooms_left = select(
-                (Rooms.quantity - func.count(booked_rooms.c.room_id)).label("rooms_left")
-            ).select_from(Rooms).join(
-                booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True
-            ).where(Rooms.id == room_id).group_by(
-                Rooms.quantity, booked_rooms.c.room_id
+            get_rooms_left = (
+                select(
+                    (Rooms.quantity - func.count(booked_rooms.c.room_id)).label(
+                        "rooms_left"
+                    )
+                )
+                .select_from(Rooms)
+                .join(booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True)
+                .where(Rooms.id == room_id)
+                .group_by(Rooms.quantity, booked_rooms.c.room_id)
             )
             rooms_left = (await session.execute(get_rooms_left)).scalar()
             if rooms_left is None:
                 raise RoomNotFoundError
             return rooms_left > 0
 
-    async def add_booking(self, user_id: int, room_id: int, date_from: date, date_to: date):
+    async def add_booking(
+        self, user_id: int, room_id: int, date_from: date, date_to: date
+    ):
         is_booking_available = await self.check_booking_available(
             room_id=room_id, date_from=date_from, date_to=date_to
         )
@@ -65,6 +80,14 @@ class BookingRepository(BaseRepository):
 
     async def get_by_user_id(self, user_id: int) -> list[Bookings]:
         return await self.get_by_filter(user_id=user_id)
+
+    async def delete_booking_by_id(self, user_id: int, booking_id: int) -> None:
+        booking = await self.get_by_filter(user_id=user_id, id=booking_id)
+        if booking:
+            async with async_session_maker() as session:
+                await session.delete(booking)
+                session.commit()
+        raise BookingNotFoundException
 
 
 booking_repository = BookingRepository()

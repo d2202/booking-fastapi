@@ -5,10 +5,10 @@ from pydantic import BaseModel
 
 class GetHotelsRequestArgs:
     def __init__(
-            self,
-            location: str,
-            date_from: date,
-            date_to: date,
+        self,
+        location: str,
+        date_from: date,
+        date_to: date,
     ) -> None:
         self.location = location
         self.date_from = date_from
