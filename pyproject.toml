@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "app"
+name = "Booking demo app"
 version = "0.1.0"
 description = "Simple FastAPI app"
 authors = ["Denis Besfamilnyy <besfamilnyy.wrk@gmail.com>"]
@@ -27,17 +27,3 @@ ruff = "^0.1.6"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.black]
-target-version = ['py39']
-line-length = 120
-extend-exclude = '/alembic'
-
-[tool.isort]
-py_version = 39
-profile = 'black'
-lines_between_types = 1
-combine_as_imports = true
-multi_line_output = 3
-force_grid_wrap = 2
-skip = ["alembic"]
