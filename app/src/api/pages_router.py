@@ -10,6 +10,12 @@ templates = Jinja2Templates(directory="app/src/templates")
 
 @router.get("/hotels")
 async def get_hotels_page(request: Request, hotels_data=Depends(get_hotels)):
+    try:
+        data = hotels_data.hotels
+    except AttributeError:
+        # using cached redis data
+        data = hotels_data['hotels']
+
     return templates.TemplateResponse(
-        name="hotels.html", context={"request": request, "hotels": hotels_data.hotels}
+        name="hotels.html", context={"request": request, "hotels": data}
     )
