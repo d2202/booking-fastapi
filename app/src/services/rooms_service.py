@@ -7,7 +7,7 @@ class RoomsService:
         self.repository = rooms_repository
 
     async def get_rooms_by_hotel_id(self, hotel_id: int) -> list[Rooms]:
-        return await self.repository.get_by_hotel_id(hotel_id=hotel_id)
+        return await self.repository.get_by_filter(hotel_id=hotel_id)
 
 
 rooms_service = RoomsService()

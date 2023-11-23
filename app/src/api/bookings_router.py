@@ -1,6 +1,4 @@
-from fastapi import APIRouter, Depends
-from starlette import status
-from starlette.responses import Response
+from fastapi import APIRouter, Depends, status, Response
 
 from app.src.api.dependencies import get_current_user
 from app.src.models.users import Users

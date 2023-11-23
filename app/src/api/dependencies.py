@@ -1,7 +1,6 @@
 import datetime
 
-from fastapi import Depends
-from starlette.requests import Request
+from fastapi import Depends, Request
 from jose import jwt, JWTError
 
 from app.config import settings

@@ -2,3 +2,4 @@
 *pycache*
 .env
 *idea*
+/app/src/static/images/*.webp

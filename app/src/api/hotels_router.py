@@ -19,5 +19,5 @@ async def get_hotels(request: GetHotelsRequestArgs = Depends()) -> GetHotelsResp
 
 @router.get("/id/{hotel_id}")
 async def get_hotel_by_id(hotel_id: int) -> Hotel:
-    hotel_data = await hotels_service.get_hotel_by_id(hotel_id=hotel_id)
+    hotel_data = await hotels_service.get_by_hotel_id(hotel_id=hotel_id)
     return Hotel(**hotel_data)
