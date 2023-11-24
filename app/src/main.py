@@ -12,6 +12,7 @@ from app.src.api.pages_router import router as pages_router
 from app.src.api.images_router import router as images_router
 
 from redis import asyncio as aioredis
+from app.config import settings
 
 app = FastAPI()
 app.include_router(router=router_users)
@@ -21,7 +22,7 @@ app.include_router(router=rooms_router)
 app.include_router(router=pages_router)
 app.include_router(router=images_router)
 
-app.mount("/static", StaticFiles(directory="app/src/static"), "static")
+app.mount("/static", StaticFiles(directory=settings.PATH_TO_STATIC), "static")
 
 origins = ["http://localhost:3000"]
 
@@ -43,7 +44,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
-    redis = aioredis.from_url("redis://localhost:6379")
+    redis = aioredis.from_url(f"{settings.REDIS_URL}:{settings.REDIS_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 

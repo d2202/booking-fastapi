@@ -2,4 +2,6 @@
 *pycache*
 .env
 *idea*
-/app/src/static/images/*.webp
+/app/static/images/1.webp
+/app/static/images/2.webp
+/app/static/images/3.webp
