@@ -12,9 +12,13 @@ router = APIRouter(
 
 @router.get("/")
 @cache(expire=60)
-async def get_hotels(request_data: GetHotelsRequestArgs = Depends()) -> GetHotelsResponse:
+async def get_hotels(
+    request_data: GetHotelsRequestArgs = Depends()
+) -> GetHotelsResponse:
     hotels = await hotels_service.get_hotels_by_location(
-        location=request_data.location, date_from=request_data.date_from, date_to=request_data.date_to
+        location=request_data.location,
+        date_from=request_data.date_from,
+        date_to=request_data.date_to,
     )
     return GetHotelsResponse(hotels=hotels)
 
