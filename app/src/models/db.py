@@ -4,11 +4,18 @@ from sqlalchemy import (
     Column,
     DateTime,
     Integer,
-    func,
+    func, NullPool,
 )
 from app.config import settings
 
-engine = create_async_engine(url=settings.database_url)
+if settings.MODE == "TEST":
+    DB_URL = settings.test_database_url
+    DB_PARAMS = {"poolclass": NullPool}
+else:
+    DB_URL = settings.database_url
+    DB_PARAMS = {}
+
+engine = create_async_engine(url=DB_URL, **DB_PARAMS)
 
 async_session_maker = sessionmaker(
     bind=engine, class_=AsyncSession, expire_on_commit=False

@@ -26,6 +26,7 @@ email-validator = "^2.1.0.post1"
 bcrypt = "^4.0.1"
 sqladmin = "^0.16.0"
 itsdangerous = "^2.1.2"
+pytest-asyncio = "^0.21.1"
 
 
 [tool.poetry.group.dev.dependencies]
