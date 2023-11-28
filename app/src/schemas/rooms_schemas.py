@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from decimal import Decimal
 
 
@@ -14,8 +14,7 @@ class Room(BaseModel):
     total_cost: Decimal
     # rooms_left: int  TODO
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class GetRoomsResponse(BaseModel):

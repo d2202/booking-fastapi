@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class User(BaseModel):
@@ -10,8 +10,7 @@ class User(BaseModel):
     updated_at: datetime.datetime
     is_admin: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostUserAuthRequest(BaseModel):
@@ -27,8 +26,7 @@ class GetUserResponse(BaseModel):
     id: int
     email: EmailStr
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class GetUsersAllResponse(BaseModel):

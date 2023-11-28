@@ -4,12 +4,12 @@ from datetime import date
 
 
 class BookingService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.repository = booking_repository
 
     async def add_booking(
         self, user_id: int, room_id: int, date_from: date, date_to: date
-    ):
+    ) -> None:
         await self.repository.add_booking(
             user_id=user_id, room_id=room_id, date_from=date_from, date_to=date_to
         )
@@ -20,7 +20,7 @@ class BookingService:
     async def get_user_bookings(self, user_id: int) -> list[Bookings]:
         return await self.repository.get_by_user_id(user_id=user_id)
 
-    async def delete_user_booking(self, user_id: int, booking_id: int):
+    async def delete_user_booking(self, user_id: int, booking_id: int) -> None:
         await self.repository.delete_booking_by_id(
             user_id=user_id, booking_id=booking_id
         )

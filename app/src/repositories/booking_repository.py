@@ -57,7 +57,7 @@ class BookingRepository(BaseRepository):
 
     async def add_booking(
         self, user_id: int, room_id: int, date_from: date, date_to: date
-    ):
+    ) -> None:
         is_booking_available = await self.check_booking_available(
             room_id=room_id, date_from=date_from, date_to=date_to
         )

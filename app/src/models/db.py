@@ -4,7 +4,8 @@ from sqlalchemy import (
     Column,
     DateTime,
     Integer,
-    func, NullPool,
+    func,
+    NullPool,
 )
 from app.config import settings
 

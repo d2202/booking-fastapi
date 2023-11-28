@@ -17,12 +17,15 @@ class UsersService:
     async def get_by_id(self, user_id: int) -> Users:
         return await self.repository.get_by_id(model_id=user_id)
 
+    async def get_by_email(self, email: str) -> Users:
+        return await self.repository.find_one_or_none(email=email)
+
     async def register_user(self, email: str, password: str) -> None:
         existing_user = await self.repository.get_user_by_email(email=email)
-        if not existing_user:
-            hashed_passwd = get_password_hash(password=password)
-            await self.repository.add_new_user(email=email, hashed_passwd=hashed_passwd)
-        raise UserAlreadyExistsException
+        if existing_user:
+            raise UserAlreadyExistsException
+        hashed_passwd = get_password_hash(password=password)
+        await self.repository.add_new_user(email=email, hashed_passwd=hashed_passwd)
 
     async def login_user(self, email: str, password: str) -> str:
         existing_user = await self.repository.get_user_by_email(email=email)

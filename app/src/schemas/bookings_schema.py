@@ -1,7 +1,7 @@
 from decimal import Decimal
 from datetime import date
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel, model_validator, ConfigDict
 
 
 class Booking(BaseModel):
@@ -14,8 +14,7 @@ class Booking(BaseModel):
     total_cost: Decimal
     total_days: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class GetAllBookingsResponse(BaseModel):
@@ -27,7 +26,7 @@ class PostAddNewBooking(BaseModel):
     date_from: date
     date_to: date
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
     def validate_dates(cls, values):
         date_to = values.get("date_to")
         date_from = values.get("date_from")
