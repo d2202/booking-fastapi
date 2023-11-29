@@ -33,6 +33,7 @@ pytest-asyncio = "^0.21.1"
 ruff = "^0.1.6"
 flower = "^2.0.1"
 httpx = "^0.25.2"
+autoflake = "^2.2.1"
 
 [build-system]
 requires = ["poetry-core"]

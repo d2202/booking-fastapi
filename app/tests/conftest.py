@@ -1,7 +1,7 @@
 import asyncio
 import json
 from datetime import datetime
-from typing import Any
+from typing import Any, AsyncGenerator
 
 import pytest
 from httpx import AsyncClient
@@ -24,7 +24,7 @@ async def prepare_db() -> None:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    def open_mock_json(model: str):
+    def open_mock_json(model: str) -> dict:
         with open(
             f"{settings.PATH_TO_MOCK}/mock_{model}.json", encoding="utf-8"
         ) as file:
@@ -54,20 +54,20 @@ async def prepare_db() -> None:
 
 
 @pytest.fixture(scope="session")
-def event_loop(request: Any) -> None:
+def event_loop(request: Any) -> AsyncGenerator[Any]:
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
 
 @pytest.fixture(scope="function")
-async def client() -> None:
+async def client() -> AsyncClient:
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         yield ac
 
 
 @pytest.fixture(scope="session")
-async def authenticated_client() -> None:
+async def authenticated_client() -> AsyncClient:
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         await ac.post(
             url="api/v1/auth/login",
@@ -82,6 +82,6 @@ async def authenticated_client() -> None:
 
 
 @pytest.fixture(scope="function")
-async def session() -> None:
+async def session() -> AsyncGenerator:
     async with async_session_maker() as session:
         yield session

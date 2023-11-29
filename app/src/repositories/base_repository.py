@@ -25,14 +25,14 @@ class BaseRepository:
         return result.scalar_one_or_none()
 
     @classmethod
-    async def get_by_filter(cls, **filter_by: Any) -> Self:
+    async def get_by_filter(cls, **filter_by: Any) -> list[Self]:
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(**filter_by)
             result = await session.execute(query)
         return result.scalars().all()
 
     @classmethod
-    async def get_all(cls) -> Self:
+    async def get_all(cls) -> list[Self]:
         if cls.model is None:
             raise AttributeError("Attribute 'model' is None")
         async with async_session_maker() as session:

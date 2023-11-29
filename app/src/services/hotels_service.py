@@ -16,7 +16,7 @@ class HotelsService:
         return await self.repository.get_by_location(location=location)
 
     async def get_by_hotel_id(self, hotel_id: int) -> Hotels:
-        hotel = self.repository.get_by_id(model_id=hotel_id)
+        hotel = await self.repository.get_by_id(model_id=hotel_id)
         if not hotel:
             raise HotelNotFoundException
         return hotel
