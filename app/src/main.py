@@ -1,6 +1,8 @@
+import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+import sentry_sdk
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
@@ -19,6 +21,7 @@ from redis import asyncio as aioredis
 from app.config import settings
 from app.src.admin.admin import UsersAdmin, BookingsAdmin, HotelsAdmin, RoomsAdmin
 from app.src.models.db import engine
+from app.logger import logger
 
 
 # Redis behaviour
@@ -60,6 +63,17 @@ app.add_middleware(
     ],
 )
 
+sentry_sdk.init(
+    dsn=settings.SENTRY_DSN,
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
 # Admin config
 admin = Admin(app, engine, authentication_backend=authentication_backend)
 admin.add_view(UsersAdmin)
@@ -72,3 +86,19 @@ admin.add_view(RoomsAdmin)
 @app.get("/health", tags=["Health check"])
 async def get_health() -> str:
     return "Ok"
+
+
+@app.get("/sentry-debug", tags=["Health check"])
+async def trigger_error():
+    division_by_zero = 1 / 0
+
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next) -> Response:
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    logger.info(
+        "Request execution time", extra={"process_time": round(process_time, 4)}
+    )
+    return response

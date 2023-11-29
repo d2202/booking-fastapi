@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     PATH_TO_STATIC: str
     MODE: Literal["DEV", "TEST", "PROD"]
     PATH_TO_MOCK: str
+    LOG_LEVEL: Literal["DEBUG", "INFO"]
+    SENTRY_DSN: str
 
     @property
     def database_url(self) -> str:
