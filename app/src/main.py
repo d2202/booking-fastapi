@@ -5,6 +5,7 @@ import sentry_sdk
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi_versioning import VersionedFastAPI
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from sqladmin import Admin
@@ -42,8 +43,6 @@ app.include_router(router=rooms_router)
 app.include_router(router=pages_router)
 app.include_router(router=images_router)
 
-app.mount("/static", StaticFiles(directory=settings.PATH_TO_STATIC), "static")
-
 
 # Middlewares
 origins = ["http://localhost:3000"]
@@ -74,12 +73,20 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
+app = VersionedFastAPI(
+    app,
+    version_format="{major}",
+    prefix_format="/v{major}",
+)
+
 # Admin config
 admin = Admin(app, engine, authentication_backend=authentication_backend)
 admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
 admin.add_view(HotelsAdmin)
 admin.add_view(RoomsAdmin)
+
+app.mount("/static", StaticFiles(directory=settings.PATH_TO_STATIC), "static")
 
 
 # app health endpoint

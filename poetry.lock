@@ -377,6 +377,18 @@ memcache = ["aiomcache"]
 redis = ["redis (>=4.2.0rc1,<5.0.0)"]
 
 [[package]]
+name = "fastapi-versioning"
+version = "0.10.0"
+description = "api versioning for fastapi web applications"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+fastapi = ">=0.56.0"
+starlette = "*"
+
+[[package]]
 name = "flower"
 version = "2.0.1"
 description = "Celery Flower"
@@ -1087,7 +1099,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "5ba56bfbe87b00906c6befa210486abcc14cff2d3df8c4a3e6ff1d6b2da7496e"
+content-hash = "a46ab7d29ca4db79b7e85ac2ded0a1e52b4aa7be85e6223092095c2905fc71c1"
 
 [metadata.files]
 aiohttp = [
@@ -1395,6 +1407,10 @@ fastapi = [
 fastapi-cache2 = [
     {file = "fastapi_cache2-0.2.1-py3-none-any.whl", hash = "sha256:532c24253ab8f162ba2f0a7dcccb98591424f0424c28da70346eb3c99daf2b06"},
     {file = "fastapi_cache2-0.2.1.tar.gz", hash = "sha256:0c68803c5a7fdebfec3e4430fd08482c091344dc4dd55a00209a882220712f89"},
+]
+fastapi-versioning = [
+    {file = "fastapi_versioning-0.10.0-py3-none-any.whl", hash = "sha256:afe0ad7a56383b884c399341260bd3301b40e5a1cf9f6dc4211a349489087e1b"},
+    {file = "fastapi_versioning-0.10.0.tar.gz", hash = "sha256:5c18ea4e9ae1afd39c9e5bed1c240bf1cabdc75217579af78249ccb651c7b5b5"},
 ]
 flower = [
     {file = "flower-2.0.1-py2.py3-none-any.whl", hash = "sha256:9db2c621eeefbc844c8dd88be64aef61e84e2deb29b271e02ab2b5b9f01068e2"},
