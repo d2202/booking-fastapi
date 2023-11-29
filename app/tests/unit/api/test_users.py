@@ -15,7 +15,7 @@ async def test_register_user(
     client: AsyncClient, email: str, password: str, status_code: int
 ) -> None:
     response = await client.post(
-        url="/auth/register", json={"email": email, "password": password}
+        url="api/v1/auth/register", json={"email": email, "password": password}
     )
     assert response.status_code == status_code
 
@@ -31,6 +31,6 @@ async def test_login_user(
     client: AsyncClient, email: str, password: str, status_code: int
 ) -> None:
     response = await client.post(
-        url="/auth/login", json={"email": email, "password": password}
+        url="api/v1/auth/login", json={"email": email, "password": password}
     )
     assert response.status_code == status_code

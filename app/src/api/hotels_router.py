@@ -5,7 +5,7 @@ from app.src.schemas.hotels_schema import GetHotelsResponse, GetHotelsRequestArg
 from app.src.services.hotels_service import hotels_service
 
 router = APIRouter(
-    prefix="/hotels",
+    prefix="/api/v1/hotels",
     tags=["Hotels and rooms"],
 )
 

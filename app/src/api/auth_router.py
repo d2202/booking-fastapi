@@ -10,7 +10,7 @@ from app.src.schemas.users_schema import (
 )
 from app.src.services.users_service import users_service
 
-router = APIRouter(prefix="/auth", tags=["Auth & Users"])
+router = APIRouter(prefix="/api/v1/auth", tags=["Auth & Users"])
 
 
 @router.post("/register")

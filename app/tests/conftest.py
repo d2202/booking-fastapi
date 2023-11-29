@@ -70,7 +70,7 @@ async def client() -> None:
 async def authenticated_client() -> None:
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         await ac.post(
-            url="/auth/login",
+            url="api/v1/auth/login",
             json={
                 # from mocked data, existing user
                 "email": "test@test.com",
