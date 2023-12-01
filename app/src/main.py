@@ -1,8 +1,7 @@
-import time
 from contextlib import asynccontextmanager
 
 import sentry_sdk
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_versioning import VersionedFastAPI
@@ -17,23 +16,25 @@ from app.src.api.hotels_router import router as router_hotels
 from app.src.api.rooms_router import router as rooms_router
 from app.src.api.pages_router import router as pages_router
 from app.src.api.images_router import router as images_router
+from app.src.api.prometheus_router import router as prometheus_router
+
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from redis import asyncio as aioredis
 from app.config import settings
 from app.src.admin.admin import UsersAdmin, BookingsAdmin, HotelsAdmin, RoomsAdmin
 from app.src.models.db import engine
-from app.logger import logger
 
 
 # Redis behaviour
 @asynccontextmanager
-async def redis_on_startup(app: FastAPI):
+async def on_startup(app: FastAPI):
     redis = aioredis.from_url(f"{settings.REDIS_URL}:{settings.REDIS_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
 
 
-app = FastAPI(lifespan=redis_on_startup)
+app = FastAPI(lifespan=on_startup)
 
 # main routes config
 app.include_router(router=router_users)
@@ -42,6 +43,7 @@ app.include_router(router=router_hotels)
 app.include_router(router=rooms_router)
 app.include_router(router=pages_router)
 app.include_router(router=images_router)
+app.include_router(router=prometheus_router)
 
 
 # Middlewares
@@ -79,6 +81,13 @@ app = VersionedFastAPI(
     prefix_format="/v{major}",
 )
 
+# Prometheus
+instrumentator = Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=[".*admin.*", "/metrics"],
+)
+instrumentator.instrument(app).expose(app)
+
 # Admin config
 admin = Admin(app, engine, authentication_backend=authentication_backend)
 admin.add_view(UsersAdmin)
@@ -93,19 +102,3 @@ app.mount("/static", StaticFiles(directory=settings.PATH_TO_STATIC), "static")
 @app.get("/health", tags=["Health check"])
 async def get_health() -> str:
     return "Ok"
-
-
-@app.get("/sentry-debug", tags=["Health check"])
-async def trigger_error():
-    division_by_zero = 1 / 0
-
-
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next) -> Response:
-    start_time = time.time()
-    response = await call_next(request)
-    process_time = time.time() - start_time
-    logger.info(
-        "Request execution time", extra={"process_time": round(process_time, 4)}
-    )
-    return response
