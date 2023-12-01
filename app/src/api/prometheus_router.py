@@ -5,10 +5,7 @@ from fastapi import APIRouter
 
 # Эндпоинты для того чтобы просто продемонстрировать работу Prometheus + Grafana
 
-router = APIRouter(
-    prefix="/prometheus",
-    tags=["Testing Grafana + Prometheus"]
-)
+router = APIRouter(prefix="/prometheus", tags=["Testing Grafana + Prometheus"])
 
 
 @router.get("/get_error")
